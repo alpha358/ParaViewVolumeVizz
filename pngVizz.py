@@ -39,7 +39,7 @@ import vtk
 iren = vtk.vtkRenderWindowInteractor()
 # vtk.vtkInteractorStyleJoystickCamera
 # vtkInteractorStyleTrackball
-iren.SetInteractorStyle(vtk.vtkInteractorStyleJoystickCamera())
+iren.SetInteractorStyle(vtk.vtkInteractorStyleTrackball())
 iren.SetRenderWindow(view.GetRenderWindow())
 iren.Initialize()
 
