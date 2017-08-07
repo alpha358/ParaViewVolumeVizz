@@ -8,6 +8,15 @@ import string
 import glob
 
 import pprint
+import re
+
+# = Useful Functions
+def sort_nicely( l ):
+	""" Sort the given list in the way that humans expect.
+	"""
+	convert = lambda text: int(text) if text.isdigit() else text
+	alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ]
+	l.sort( key=alphanum_key )
 
 # ============================ Get File names =============================
 img_files = glob.glob("*.png");
@@ -17,7 +26,7 @@ img_files = glob.glob("*.png");
 # ============================ Series Readers =============================
 # help(para.simple.JPEGSeriesReader())
 reader = paraview.simple.PNGSeriesReader(
-                                FileNames = img_files,
+                                FileNames = sort_nicely(img_files),
                                 ReadAsImageStack = True,
                                 DataSpacing = (1,1,40)
                             );
@@ -31,7 +40,7 @@ ColorBy(display , "PNGImage")
 
 # ------------------------------- Color Map -------------------------------
 colorMap = GetColorTransferFunction('PNGImage')
-colorMap.RGBPoints = [0.025500000000000005, 1.0, 1.0, 1.0, 43.37116500000003, 0.0, 0.0, 1.0, 86.71683000000006, 0.0, 1.0, 1.0, 127.51275000000008, 0.0, 1.0, 0.0, 170.85841500000012, 1.0, 1.0, 0.0, 214.20408000000015, 1.0, 0.0, 0.0, 255.00000000000017, 0.878431372549, 0.0, 1.0]
+#colorMap.RGBPoints = [0.025500000000000005, 1.0, 1.0, 1.0, 43.37116500000003, 0.0, 0.0, 1.0, 86.71683000000006, 0.0, 1.0, 1.0, 127.51275000000008, 0.0, 1.0, 0.0, 170.85841500000012, 1.0, 1.0, 0.0, 214.20408000000015, 1.0, 0.0, 0.0, 255.00000000000017, 0.878431372549, 0.0, 1.0]
 
 # ------------------------------- ColorBar --------------------------------
 # source = GetActiveSource()
@@ -72,8 +81,9 @@ axesGrid.Visibility = 1
 
 
 # =============================== Save IMG ================================
+
 paraview.simple.SaveScreenshot(
-    "../testas.png",
+    "../" + os.path.relpath( os.getcwd(), os.path.dirname(os.getcwd()) ) + ".png",
      viewOrLayout=None,
      ImageResolution = (800, 800)
 )
