@@ -9,18 +9,44 @@ import glob
 
 import pprint
 
+import re
+import vtk
+
+# =========================== Useful Functions ============================
+def sort_nicely( l ):
+    #  Sort the given list in the way that humans expect.
+    convert = lambda text: int(text) if text.isdigit() else text
+    alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ]
+    l.sort( key=alphanum_key );
+    return l;
+
 # ============================ Get File names =============================
-img_files = glob.glob("*.png");
+img_files = glob.glob("results/Z_SCAN2_L=1000th=43.3333/*.png");
 
 # pprint.pprint(img_files)
+# print img_files;
+# print sort_nicely(img_files);
 
+# exit()
 # ============================ Series Readers =============================
 # help(para.simple.JPEGSeriesReader())
 reader = paraview.simple.PNGSeriesReader(
-                                FileNames = img_files,
+                                FileNames = sort_nicely(img_files),
                                 ReadAsImageStack = True,
                                 DataSpacing = (1,1,40)
                             );
+
+# ===================== Initialize a new interactor ======================
+# Initialize a new interactor
+view = CreateRenderView()
+import vtk
+iren = vtk.vtkRenderWindowInteractor()
+# vtk.vtkInteractorStyleJoystickCamera
+# vtkInteractorStyleTrackball
+iren.SetInteractorStyle(vtk.vtkInteractorStyleJoystickCamera())
+iren.SetRenderWindow(view.GetRenderWindow())
+iren.Initialize()
+
 
 # ================================= Show ==================================
 display = Show(reader)
@@ -54,6 +80,11 @@ opacityMap.Points = [1.0, 0.0,     0.5,    0.0,
                      255, 1.0,    0.5, 0.0]
 
 Render()
+# view = GetActiveView()
+# iren.SetRenderWindow(view.GetRenderWindow())
+# iren.Initialize()
+iren.Start()
+
 
 # -------------------------------- Camera ---------------------------------
 paraview.simple.GetActiveCamera().SetPosition(
@@ -72,8 +103,9 @@ axesGrid.Visibility = 1
 
 
 # =============================== Save IMG ================================
-paraview.simple.SaveScreenshot(
-    "../testas.png",
-     viewOrLayout=None,
-     ImageResolution = (800, 800)
-)
+# paraview.simple.SaveScreenshot(
+#     "../testas.png",
+#      viewOrLayout=None,
+#      ImageResolution = (800, 800)
+# )
+# Show3DWidgets();
