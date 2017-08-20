@@ -21,7 +21,9 @@ def sort_nicely( l ):
     return l;
 
 # ============================ Get File names =============================
-img_files = glob.glob("results/Z_SCAN2_L=1000th=43.3333/*.png");
+#img_files = glob.glob("C:/Users/Alfonsas/Desktop/ParaViewVolumeVizz/results/Z_SCAN2_L=1000th=43.3333/*.png");
+#img_files = glob.glob("results/Z_SCAN2_L=1000th=43.3333/*.png");
+img_files = glob.glob("*.png");
 
 # pprint.pprint(img_files)
 # print img_files;
@@ -33,19 +35,19 @@ img_files = glob.glob("results/Z_SCAN2_L=1000th=43.3333/*.png");
 reader = paraview.simple.PNGSeriesReader(
                                 FileNames = sort_nicely(img_files),
                                 ReadAsImageStack = True,
-                                DataSpacing = (1,1,40)
+                                DataSpacing = (1,1,10)
                             );
 
 # ===================== Initialize a new interactor ======================
 # Initialize a new interactor
-view = CreateRenderView()
-import vtk
-iren = vtk.vtkRenderWindowInteractor()
-# vtk.vtkInteractorStyleJoystickCamera
-# vtkInteractorStyleTrackball
-iren.SetInteractorStyle(vtk.vtkInteractorStyleJoystickCamera())
-iren.SetRenderWindow(view.GetRenderWindow())
-iren.Initialize()
+#  view = CreateRenderView()
+#  import vtk
+#  iren = vtk.vtkRenderWindowInteractor()
+#  # vtk.vtkInteractorStyleJoystickCamera
+#  # vtkInteractorStyleTrackball
+#  iren.SetInteractorStyle(vtk.vtkInteractorStyleJoystickCamera())
+#  iren.SetRenderWindow(view.GetRenderWindow())
+#  iren.Initialize()
 
 
 # ================================= Show ==================================
@@ -57,7 +59,7 @@ ColorBy(display , "PNGImage")
 
 # ------------------------------- Color Map -------------------------------
 colorMap = GetColorTransferFunction('PNGImage')
-colorMap.RGBPoints = [0.025500000000000005, 1.0, 1.0, 1.0, 43.37116500000003, 0.0, 0.0, 1.0, 86.71683000000006, 0.0, 1.0, 1.0, 127.51275000000008, 0.0, 1.0, 0.0, 170.85841500000012, 1.0, 1.0, 0.0, 214.20408000000015, 1.0, 0.0, 0.0, 255.00000000000017, 0.878431372549, 0.0, 1.0]
+#colorMap.RGBPoints = [0.025500000000000005, 1.0, 1.0, 1.0, 43.37116500000003, 0.0, 0.0, 1.0, 86.71683000000006, 0.0, 1.0, 1.0, 127.51275000000008, 0.0, 1.0, 0.0, 170.85841500000012, 1.0, 1.0, 0.0, 214.20408000000015, 1.0, 0.0, 0.0, 255.00000000000017, 0.878431372549, 0.0, 1.0]
 
 # ------------------------------- ColorBar --------------------------------
 # source = GetActiveSource()
@@ -83,12 +85,12 @@ Render()
 # view = GetActiveView()
 # iren.SetRenderWindow(view.GetRenderWindow())
 # iren.Initialize()
-iren.Start()
+# iren.Start()
 
 
 # -------------------------------- Camera ---------------------------------
 paraview.simple.GetActiveCamera().SetPosition(
-    (-3246.8811397036384, 3140.7476618452392, -2217.6731165778656)
+    (-843.5316786119256, 2379.3210929380434, 979.5874722341106)
 )
 
 # --------------------------------- Axes ----------------------------------
@@ -109,3 +111,9 @@ axesGrid.Visibility = 1
 #      ImageResolution = (800, 800)
 # )
 # Show3DWidgets();
+
+
+
+# ========== Playground
+# cwd = os.getcwd();
+# print(cwd);
