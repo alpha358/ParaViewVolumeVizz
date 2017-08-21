@@ -8,23 +8,21 @@ import string
 import glob
 
 import pprint
-
 import re
-import vtk
+
 
 SPACING_SCALE = 3;
 
 # =========================== Useful Functions ============================
 def sort_nicely( l ):
-    #  Sort the given list in the way that humans expect.
-    convert = lambda text: int(text) if text.isdigit() else text
-    alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ]
-    l.sort( key=alphanum_key );
-    return l;
+	""" Sort the given list in the way that humans expect.
+	"""
+	convert = lambda text: int(text) if text.isdigit() else text
+	alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ]
+	l.sort( key=alphanum_key )
+	return l;
 
 # ============================ Get File names =============================
-#img_files = glob.glob("C:/Users/Alfonsas/Desktop/ParaViewVolumeVizz/results/Z_SCAN2_L=1000th=43.3333/*.png");
-#img_files = glob.glob("results/Z_SCAN2_L=1000th=43.3333/*.png");
 img_files = glob.glob("*.png");
 
 z_coords = []
@@ -32,11 +30,9 @@ for i in img_files:
 	z_coords.append(float(i[0:-4]))
 
 
-# pprint.pprint(img_files)
-# print img_files;
-# print sort_nicely(img_files);
 
-# exit()
+# pprint.pprint(img_files)
+
 # ============================ Series Readers =============================
 # help(para.simple.JPEGSeriesReader())
 reader = paraview.simple.PNGSeriesReader(
@@ -45,18 +41,16 @@ reader = paraview.simple.PNGSeriesReader(
                                 DataSpacing = (1,1,SPACING_SCALE)
                             );
 
-pprint.pprint(sort_nicely(img_files));
 # ===================== Initialize a new interactor ======================
 # Initialize a new interactor
-#  view = CreateRenderView()
-#  import vtk
-#  iren = vtk.vtkRenderWindowInteractor()
-#  # vtk.vtkInteractorStyleJoystickCamera
-#  # vtkInteractorStyleTrackball
-#  iren.SetInteractorStyle(vtk.vtkInteractorStyleJoystickCamera())
-#  iren.SetRenderWindow(view.GetRenderWindow())
-#  iren.Initialize()
-
+view = CreateRenderView()
+# import vtk
+# iren = vtk.vtkRenderWindowInteractor()
+# # vtk.vtkInteractorStyleJoystickCamera
+# # vtkInteractorStyleTrackball
+# iren.SetInteractorStyle(vtk.vtkInteractorStyleTrackball())
+# iren.SetRenderWindow(view.GetRenderWindow())
+# iren.Initialize()
 
 # ================================= Show ==================================
 display = Show(reader)
@@ -67,7 +61,7 @@ ColorBy(display , "PNGImage")
 
 # ------------------------------- Color Map -------------------------------
 colorMap = GetColorTransferFunction('PNGImage')
-#colorMap.RGBPoints = [0.025500000000000005, 1.0, 1.0, 1.0, 43.37116500000003, 0.0, 0.0, 1.0, 86.71683000000006, 0.0, 1.0, 1.0, 127.51275000000008, 0.0, 1.0, 0.0, 170.85841500000012, 1.0, 1.0, 0.0, 214.20408000000015, 1.0, 0.0, 0.0, 255.00000000000017, 0.878431372549, 0.0, 1.0]
+colorMap.RGBPoints = [0.025500000000000005, 1.0, 1.0, 1.0, 43.37116500000003, 0.0, 0.0, 1.0, 86.71683000000006, 0.0, 1.0, 1.0, 127.51275000000008, 0.0, 1.0, 0.0, 170.85841500000012, 1.0, 1.0, 0.0, 214.20408000000015, 1.0, 0.0, 0.0, 255.00000000000017, 0.878431372549, 0.0, 1.0]
 
 # ------------------------------- ColorBar --------------------------------
 # source = GetActiveSource()
@@ -89,42 +83,39 @@ opacityMap.Points = [1.0, 0.0,     0.5,    0.0,
                      135,     0.0204,  0.5, 0.0,
                      255, 1.0,    0.5, 0.0]
 
-Render()
-# view = GetActiveView()
-# iren.SetRenderWindow(view.GetRenderWindow())
-# iren.Initialize()
-# iren.Start()
 
 
 # -------------------------------- Camera ---------------------------------
 paraview.simple.GetActiveCamera().SetPosition(
-    (-843.5316786119256, 2379.3210929380434, 979.5874722341106)
+    (-3246.8811397036384, 3140.7476618452392, -2217.6731165778656)
 )
 
 # --------------------------------- Axes ----------------------------------
 renderView = GetActiveView()
-renderView.OrientationAxesVisibility=0
+renderView.OrientationAxesVisibility=1
 
  # AxesGrid property provides access to the AxesGrid object.
 axesGrid = renderView.AxesGrid
  # To toggle visibility of the axes grid,
 axesGrid.Visibility = 1
 
+# Axes Labels & Ticks
 
+#axesGrid.ZAxisLabels = z_coords;
+#ZAxisUseCustomLabels = 0;
 axesGrid.ZTitle = 'Z, mm'
-axesGrid.DataScale = [1 , 1 , 1/(max(z_coords) - min(z_coords)) * len(z_coords)*SPACING_SCALE]
-
+axesGrid.DataScale = [1 , 1 , max(z_coords)/length(z_coords)/SPACING_SCALE]
 
 # =============================== Save IMG ================================
-# paraview.simple.SaveScreenshot(
-#     "../testas.png",
-#      viewOrLayout=None,
-#      ImageResolution = (800, 800)
-# )
-# Show3DWidgets();
 
+paraview.simple.SaveScreenshot(
+    "../" + os.path.relpath( os.getcwd(), os.path.dirname(os.getcwd()) ) + ".png",
+     viewOrLayout=None,
+     ImageResolution = (800, 800)
+)
 
+# ==================== Start the interactor ===============================
+Render()
+#Interact()
+#iren.Start() # start the interactor
 
-# ========== Playground
-# cwd = os.getcwd();
-# print(cwd);
