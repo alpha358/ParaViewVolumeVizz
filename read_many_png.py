@@ -12,7 +12,7 @@ import pprint
 import re
 import vtk
 
-SPACING_SCALE = 3;
+SPACING_SCALE = 15;
 
 # =========================== Useful Functions ============================
 def sort_nicely( l ):
